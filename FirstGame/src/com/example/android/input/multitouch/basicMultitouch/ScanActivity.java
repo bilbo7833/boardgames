@@ -18,6 +18,7 @@ public class ScanActivity extends Activity
 {
     /** Called when the activity is first created. */
     Button    b1;
+    Button    btnTouch;
     ImageView playerImg;
     TextView  headline;
 
@@ -29,6 +30,7 @@ public class ScanActivity extends Activity
         headline = ( TextView ) findViewById( R.id.txt_head);
         playerImg = ( ImageView ) findViewById( R.id.img_player );
         b1 = ( Button ) findViewById( R.id.btn_scan );
+        btnTouch = ( Button ) findViewById( R.id.btn_touch );
         b1.setOnClickListener( new OnClickListener()
         {
 
@@ -45,6 +47,18 @@ public class ScanActivity extends Activity
                 intent.setAction( Intents.Scan.ACTION );
                 intent.putExtra( "com.google.zxing.client.android.SCAN.SCAN_MODE", "QR_CODE_MODE" );
                 startActivityForResult( intent, 0 );
+
+            }
+        } );
+
+        btnTouch.setOnClickListener( new OnClickListener()
+        {
+
+            @Override
+            public void onClick( View v )
+            {
+                Intent intent = new Intent( ScanActivity.this, FirstGameActivity.class );
+                startActivity( intent );
 
             }
         } );

@@ -33,7 +33,7 @@ import com.android.example.input.multitouch.basicMultitouch.R;
  *
  * @see MotionEvent
  */
-public class MainActivity extends Activity {
+public class FirstGameActivity extends Activity {
     TouchDisplayView mView;
 
     @Override

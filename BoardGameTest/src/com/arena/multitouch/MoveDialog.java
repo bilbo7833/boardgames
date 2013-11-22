@@ -17,13 +17,13 @@ public class MoveDialog extends DialogFragment {
 		public void onMoveDialogNo(DialogFragment dialog);
 	}
 	
-	MoveDialogListener mListener;
+	MoveDialogListener moveDialogListener;
 	
 	@Override
 	public void onAttach(Activity activity) {
 		super.onAttach(activity);
 		try {
-			mListener = (MoveDialogListener) activity;
+			moveDialogListener = (MoveDialogListener) activity;
 		} catch (ClassCastException e) {
 			throw new ClassCastException(activity.toString()
 					+ " must implement MoveDialogListener");
@@ -40,13 +40,13 @@ public class MoveDialog extends DialogFragment {
 			.setNegativeButton(R.string.move_dialog_no, new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog, int id) {
 					// No
-					mListener.onMoveDialogNo(MoveDialog.this);
+					moveDialogListener.onMoveDialogNo(MoveDialog.this);
 				}
 			})
 			.setPositiveButton(R.string.move_dialog_yes, new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog, int id) {
 					// Yes
-					mListener.onMoveDialogYes(MoveDialog.this);
+					moveDialogListener.onMoveDialogYes(MoveDialog.this);
 				}
 			});
 		

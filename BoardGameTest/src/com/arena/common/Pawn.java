@@ -54,8 +54,8 @@ public class Pawn extends Touch {
     }
     
     public void logDebug(String tag) {
-    	Log.d(tag, "pawn - " + this.getLabel() + ",x: " + this.x 
-    			+ ",y: " + this.y + ",status: " + this.status);
+    	Log.d(tag, "pawn - " + this.getLabel() + ",x: " + this.getX() 
+    			+ ",y: " + this.getY() + ",status: " + this.getStatus());
     	return;
     }
     

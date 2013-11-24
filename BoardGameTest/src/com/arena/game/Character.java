@@ -1,46 +1,23 @@
 package com.arena.game;
 
 public class Character {
-	// description
 	private String name;
 	private String description;
-
-	// basic attributes
-	private int strength;
-	private int toughness;
-	private int agility;
-	private int willPower;
 	
-	// secondary attributes
-	private float initiative;
-	private float meleeSkill;
-	private float rangedWeaponSkill;
-	private float loadCapacity;
-	private int hitPoints;
+	private PrimaryAttributes primaryAttributes;
+	private SecondaryAttributes secondaryAttributes;
 	
-	// experience
 	private int experiencePoints = 0;
 	private int level = 1;
 	
-	// equipment
-	private MeleeWeapon meleeWeapon = null;
-	private RangedWeapon rangedWeapon = null;
-	private Armor armor = null;
-
+	private Equipment equipment;
 	
 	public Character(String name, int strength, int toughness, int agility, int willPower) {
-		this.setName(name);	
-	
-		this.setStrength(strength);
-		this.setToughness(toughness);
-		this.setAgility(agility);
-		this.setWillPower(willPower);
+		this.setName(name);
 		
-		this.setInitiative(agility);
-		this.setMeleeSkill((strength + agility) / 2);
-		this.setRangedWeaponSkill((agility + willPower) /2);
-		this.setLoadCapacity((strength + toughness) / 2);
-		this.setHitPoints(toughness * 2);
+		this.primaryAttributes = new PrimaryAttributes(strength, toughness, agility, willPower);
+		this.secondaryAttributes = new SecondaryAttributes(this.primaryAttributes);
+		this.equipment = new Equipment();
 		return;
 	}
 
@@ -53,24 +30,6 @@ public class Character {
 		this.updateLevel();
 		return;
 	}
-	
-	public MeleeWeapon getMeleeWeapon() {
-		return this.meleeWeapon;
-	}
-	
-	public void setMeleeWeapon(MeleeWeapon meleeWeapon) {
-		this.meleeWeapon = meleeWeapon;
-		return;
-	}
-	
-	public Armor getArmor() {
-		return this.armor;
-	}
-	
-	public void setArmor(Armor armor) {
-		this.armor = armor;
-		return;
-	}
 
 	public int getLevel() {
 		return level;
@@ -78,78 +37,6 @@ public class Character {
 
 	public void setLevel(int level) {
 		this.level = level;
-	}
-
-	public int getHitPoints() {
-		return hitPoints;
-	}
-
-	public void setHitPoints(int hitPoints) {
-		this.hitPoints = hitPoints;
-	}
-
-	public float getLoadCapacity() {
-		return loadCapacity;
-	}
-
-	public void setLoadCapacity(float loadCapacity) {
-		this.loadCapacity = loadCapacity;
-	}
-
-	public float getRangedWeaponSkill() {
-		return rangedWeaponSkill;
-	}
-
-	public void setRangedWeaponSkill(float rangedWeaponSkill) {
-		this.rangedWeaponSkill = rangedWeaponSkill;
-	}
-
-	public float getMeleeSkill() {
-		return meleeSkill;
-	}
-
-	public void setMeleeSkill(float meleeSkill) {
-		this.meleeSkill = meleeSkill;
-	}
-
-	public float getInitiative() {
-		return initiative;
-	}
-
-	public void setInitiative(float initiative) {
-		this.initiative = initiative;
-	}
-
-	public int getWillPower() {
-		return willPower;
-	}
-
-	public void setWillPower(int willPower) {
-		this.willPower = willPower;
-	}
-
-	public int getAgility() {
-		return agility;
-	}
-
-	public void setAgility(int agility) {
-		this.agility = agility;
-	}
-
-	public int getToughness() {
-		return toughness;
-	}
-
-	public void setToughness(int toughness) {
-		this.toughness = toughness;
-	}
-
-	public int getStrength() {
-		return strength;
-	}
-
-	public void setStrength(int strength) {
-		this.strength = strength;
 	}
 
 	public String getDescription() {
@@ -168,60 +55,87 @@ public class Character {
 		this.name = name;
 	}
 	
-	public RangedWeapon getRangedWeapon() {
-		return rangedWeapon;
+	public PrimaryAttributes getPrimaryAttributes() {
+		return this.primaryAttributes;
 	}
-
-	public void setRangedWeapon(RangedWeapon rangedWeapon) {
-		this.rangedWeapon = rangedWeapon;
+	
+	public void setPrimaryAttributes(int strength, int toughness, int agility, int willPower) {
+		this.primaryAttributes = new PrimaryAttributes(strength, toughness, agility, willPower);
+		return;
+	}
+	
+	public SecondaryAttributes getSecondaryAttributes() {
+		return this.secondaryAttributes;
+	}
+	
+	public void updateSecondaryAttributes() {
+		this.secondaryAttributes = new SecondaryAttributes(this.primaryAttributes);
+		return;
+	}
+	
+	public Equipment getEquipment() {
+		return this.equipment;
+	}
+	
+	public void setEquipment(MeleeWeapon meleeWeapon, RangedWeapon rangedWeapon, Armor armor) {
+		this.equipment = new Equipment(meleeWeapon, rangedWeapon, armor);
+		return;
 	}
 
 	public void addExperiencePoints(int experiencePoints) {
-		this.setExperiencePoints(this.getExperiencePoints() + experiencePoints);
+		this.experiencePoints += experiencePoints;
 		return;
 	}
 	
 	private void updateLevel() {
-		this.setLevel((int) Math.floor(0.5 + Math.sqrt(0.25 + 0.4 * this.experiencePoints)));
+		this.level = (int) Math.floor(0.5 + Math.sqrt(0.25 + 0.4 * this.experiencePoints));
 		return;
 	}
 	
-	private float getCombatSkillBonus() {
-		return (float) 0.5 * this.meleeSkill / 100;
-	}
 	
-	private float getRangedCombatSkillBonus() {
-		return (float) 0.5 * this.rangedWeaponSkill / 100;
+	/*
+	 * Melee
+	 */
+	private float getMeleeSkillBonus() {
+		return (float) 0.5 * this.secondaryAttributes.getMeleeSkill() / 100;
 	}
 	
 	private float getMeleeEvasionPenalty() {
-		return (float) -0.25 * this.agility / 100;
-	}
-	
-	private float getRangedCombatEvasionPenalty() {
-		return (float) -0.1 * this.agility / 100;
+		return (float) -0.25 * this.primaryAttributes.getAgility() / 100;
 	}
 	
 	public boolean meleeHit(Character opponent) {
 		float chanceToHit = 0.5f;
-		chanceToHit += this.getCombatSkillBonus();
+		chanceToHit += this.getMeleeSkillBonus();
 		chanceToHit += opponent.getMeleeEvasionPenalty();
 		return (Math.random() <= chanceToHit);
 	}
 	
 	public boolean meleeCriticalHit(Character opponent) {
 		float chanceToHit = 0.05f;
-		chanceToHit += 0.05 * Math.max(0, (2 * this.meleeSkill - opponent.toughness) / 100);
+		chanceToHit += 0.05 * Math.max(0, (2 * this.secondaryAttributes.getMeleeSkill()
+				- opponent.primaryAttributes.getToughness()) / 100);
 		return (Math.random() <= chanceToHit);
 	}
 	
+	/*
+	 * Ranged Combat
+	 */
+	private float getRangedCombatSkillBonus() {
+		return (float) 0.5 * this.secondaryAttributes.getRangedCombatSkill() / 100;
+	}	
+	
+	private float getRangedCombatEvasionPenalty() {
+		return (float) -0.1 * this.primaryAttributes.getAgility() / 100;
+	}	
+	
 	private float getRangedCombatRangePenalty(float range) {
-		float shortRange = this.getRangedWeapon().getShortRange();
-		return 0.25f * Math.max(0, (range - shortRange) / shortRange);
+		float shortRange = this.equipment.getRangedWeapon().getShortRange();
+		return -0.25f * Math.max(0, (range - shortRange) / shortRange);
 	}
 	
 	private float getRangedCombatMovementPenalty(float movement) {
-		return 0.25f * (movement / this.getMovingRange());
+		return -0.25f * (movement / this.getMovingRange());
 	}
 	
 	public boolean rangedCombatHit(Character opponent, float range, float movement) {
@@ -231,16 +145,27 @@ public class Character {
 		return (Math.random() <= chanceToHit);
 	}
 	
-	public float getLoad() {
-		return this.getMeleeWeapon().getLoad() + this.getArmor().getLoad();
+	public boolean rangedCombatCriticalHit(Character opponent) {
+		float chanceToHit = 0.05f;
+		chanceToHit *= Math.max(0f, (2 * this.secondaryAttributes.getRangedCombatSkill()
+				- opponent.primaryAttributes.getToughness()) / 100);
+		return (Math.random() <= chanceToHit);
 	}
 	
+	public float getLoad() {
+		return this.equipment.getMeleeWeapon().getLoad() + this.equipment.getArmor().getLoad();
+	}
+	
+	
+	/*
+	 * Movement
+	 */
 	public float getAgilityBonus() {
-		return this.agility / 100;
+		return this.primaryAttributes.getAgility() / 100;
 	}
 	
 	public float getArmorPenalty() {
-		return -Math.max(0, (this.getLoad() - this.getLoadCapacity()) / 100);
+		return -Math.max(0, (this.getLoad() - this.secondaryAttributes.getLoadCapacity()) / 100);
 	}
 	
 	public float getMovingRange() {
@@ -254,28 +179,47 @@ public class Character {
 		return runningRange + runningBonus + this.getAgilityBonus() + 0.5f * this.getArmorPenalty();
 	}
 	
+	public float getChargingRange() {
+		float basicRange = (float) (1.5 + 0.5 * Math.random());
+		return basicRange + this.getAgilityBonus() + 0.5f * this.getArmorPenalty();
+	}	
+
+	
+	/*
+	 * Damage
+	 */
 	private float getArmorReduction() {
-		return - this.getArmor().getArmor();
+		return - this.equipment.getArmor().getArmor();
 	}
 	
 	private float getStrengthModifier() {
-		int minStrength = this.getMeleeWeapon().getMinStrength();
-		int basicDamage = this.getMeleeWeapon().getBasicDamage();
-		return ((this.strength < minStrength) ? 2 : 0.5f) * (this.strength / minStrength - 1) * basicDamage;
+		int minStrength = this.equipment.getMeleeWeapon().getMinStrength();
+		int basicDamage = this.equipment.getMeleeWeapon().getBasicDamage();
+		return ((this.primaryAttributes.getStrength() < minStrength) ? 2 : 0.5f)
+				* (this.primaryAttributes.getStrength() / minStrength - 1) * basicDamage;
 	}
 	
 	private float getChargeBonus(float chargingRange) {
-		return chargingRange * this.getMeleeWeapon().getCriticalHitMultiplier();
+		return chargingRange * this.equipment.getMeleeWeapon().getCriticalHitMultiplier();
 	}
 	
 	public float getMeleeDamage(Character opponent, float chargingRange) {
-		float basicDamage = this.getMeleeWeapon().getBasicDamage();
-		float damageRange = this.getMeleeWeapon().getDamageRange();
+		float basicDamage = this.equipment.getMeleeWeapon().getBasicDamage();
+		float damageRange = this.equipment.getMeleeWeapon().getDamageRange();
 		float strengthModifier = this.getStrengthModifier();
 		float criticalHitMultiplier = (this.meleeCriticalHit(opponent) ?
-				this.getMeleeWeapon().getCriticalHitMultiplier() : 1);
+				this.equipment.getMeleeWeapon().getCriticalHitMultiplier() : 1);
 		return Math.max(0, basicDamage * criticalHitMultiplier + damageRange
 				+ strengthModifier + opponent.getArmorReduction() + this.getChargeBonus(chargingRange));
+	}
+	
+	public float getRangedCombatDamage(Character opponent) {
+		float basicDamage = this.equipment.getRangedWeapon().getBasicDamage();
+		float damageRange = this.equipment.getRangedWeapon().getDamageRange();
+		float criticalHitMultiplier = (this.meleeCriticalHit(opponent) ?
+				this.equipment.getRangedWeapon().getCriticalHitMultiplier() : 1);
+		return Math.max(0, basicDamage * criticalHitMultiplier
+				+ damageRange + opponent.getArmorReduction());
 	}
 }
 

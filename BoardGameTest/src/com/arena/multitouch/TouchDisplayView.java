@@ -27,8 +27,8 @@ import android.util.SparseArray;
 import android.view.MotionEvent;
 import android.view.View;
 
-import com.arena.common.Pawn;
-import com.arena.common.Pawn.Status;
+import com.arena.board.Pawn;
+import com.arena.board.Pawn.Status;
 
 /**
  * View that shows touch events and their history. This view demonstrates the

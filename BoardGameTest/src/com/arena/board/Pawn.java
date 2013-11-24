@@ -1,4 +1,4 @@
-package com.arena.common;
+package com.arena.board;
 
 import android.util.Log;
 

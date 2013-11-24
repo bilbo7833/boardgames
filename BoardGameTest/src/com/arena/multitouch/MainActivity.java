@@ -25,8 +25,8 @@ import android.util.SparseArray;
 import android.view.MotionEvent;
 
 import com.android.example.input.multitouch.basicMultitouch.R;
-import com.arena.common.Pawn;
-import com.arena.common.Pawn.Status;
+import com.arena.board.Pawn;
+import com.arena.board.Pawn.Status;
 import com.arena.multitouch.MoveDialog.MoveDialogListener;
 
 /**

@@ -1,4 +1,4 @@
-package com.arena.common;
+package com.arena.board;
 
 import android.graphics.PointF;
 import android.view.MotionEvent;

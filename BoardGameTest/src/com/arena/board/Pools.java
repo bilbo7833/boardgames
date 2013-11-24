@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.arena.common;
+package com.arena.board;
 
 /**
  * Helper class for crating pools of objects. An example use looks like this:

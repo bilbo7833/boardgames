@@ -23,6 +23,8 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.util.AttributeSet;
+import android.util.DisplayMetrics;
+import android.util.Log;
 import android.util.SparseArray;
 import android.view.MotionEvent;
 import android.view.View;
@@ -127,7 +129,16 @@ public class TouchDisplayView extends View {
 
         // Calculate radiuses in px from dp based on screen density
         float density = getResources().getDisplayMetrics().density;
-        mCircleRadius = CIRCLE_RADIUS_DP * density;
+        float height = getResources().getDisplayMetrics().heightPixels;
+        float width = getResources().getDisplayMetrics().widthPixels;
+        float ydpi = getResources().getDisplayMetrics().ydpi;
+        float xdpi = getResources().getDisplayMetrics().xdpi;
+        
+        Log.d("initialisePaint", "height: " + height + ", width: " + width + ", ydpi:" + ydpi + ", xdpi: " + xdpi + ", density:" + density);
+        Log.d("initialisePaint", "derived metrics - height: " + height / (ydpi * density) * 2.54 + ", width: " + width / (xdpi * density) * 2.54);
+        
+        //mCircleRadius = CIRCLE_RADIUS_DP * density;
+        mCircleRadius = xdpi * density / 2; 
 
         // Setup text paint for circle label
         mTextPaint.setTextSize(27f);
@@ -172,7 +183,8 @@ public class TouchDisplayView extends View {
          * exceed 1.0, depending on the calibration of the touch screen).
          */
         float pressure = Math.min(pawn.getPressure(), 1f);
-        float radius = pressure * mCircleRadius;
+        //float radius = pressure * mCircleRadius;
+        float radius = mCircleRadius;
 
         canvas.drawCircle(pawn.getX(), pawn.getY() - (radius / 2f), radius,
                 mCirclePaint);

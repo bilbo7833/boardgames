@@ -16,13 +16,20 @@
 
 package com.arena.multitouch;
 
+import android.annotation.TargetApi;
+import android.content.Context;
+import android.graphics.Point;
 import android.graphics.PointF;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentActivity;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.util.SparseArray;
+import android.view.Display;
 import android.view.MotionEvent;
+import android.view.WindowManager;
 
 import com.android.example.input.multitouch.basicMultitouch.R;
 import com.arena.board.Pawn;
@@ -62,7 +69,7 @@ public class MainActivity extends FragmentActivity implements MoveDialogListener
     // Is there a valid touch?
     private boolean mValidTouch = false;
 	
-    @Override
+	@Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         
@@ -71,6 +78,9 @@ public class MainActivity extends FragmentActivity implements MoveDialogListener
         movingRanges = new SparseArray<Pawn>(MAX_NUMBER_OF_PAWNS);
         
         setContentView(R.layout.layout_mainactivity);
+
+        Point size = this.getDisplaySize(this);
+        Log.d("onCreate", "x: " + size.x + ", y: " + size.y);
     }
     
 	@Override
@@ -380,4 +390,58 @@ public class MainActivity extends FragmentActivity implements MoveDialogListener
     	view.movingRanges = movingRanges;
 		view.postInvalidate();
     }
+    
+    private Point getDisplaySize(Context context) {
+
+    if (Build.VERSION.SDK_INT >= 17) {
+        return getDisplaySizeMinSdk17(context);
+    } else if (Build.VERSION.SDK_INT >= 13) {
+        return getDisplaySizeMinSdk13(context);
+    } else {
+        return getDisplaySizeMinSdk1(context);
+    }
+}
+	
+	@TargetApi(17)
+	private Point getDisplaySizeMinSdk17(Context context) {
+	    final WindowManager windowManager = (WindowManager) context
+	            .getSystemService(Context.WINDOW_SERVICE);
+	    final Display display = windowManager.getDefaultDisplay();
+	
+	    final DisplayMetrics metrics = new DisplayMetrics();
+	    display.getRealMetrics(metrics);
+	
+	    final Point size = new Point();
+	    size.x = metrics.widthPixels;
+	    size.y = metrics.heightPixels;
+	
+	    return size;
+	}
+	
+	@TargetApi(13)
+	private Point getDisplaySizeMinSdk13(Context context) {
+	
+	    final WindowManager windowManager = (WindowManager) context
+	            .getSystemService(Context.WINDOW_SERVICE);
+	    final Display display = windowManager.getDefaultDisplay();
+	
+	    final Point size = new Point();
+	    display.getSize(size);
+	
+	    return size;
+	}
+	
+	@SuppressWarnings("deprecation")
+	private Point getDisplaySizeMinSdk1(Context context) {
+	
+	    final WindowManager windowManager = (WindowManager) context
+	            .getSystemService(Context.WINDOW_SERVICE);
+	    final Display display = windowManager.getDefaultDisplay();
+	
+	    final Point size = new Point();
+	    size.x = display.getWidth();
+	    size.y = display.getHeight();
+	
+	    return size;
+	}
 }
